@@ -1,0 +1,18 @@
+# GitHub Funding Configuration for Autonomous Revenue Engine
+# Non-custodial multi-chain cryptocurrency payment and donation rails
+
+github: []
+patreon: []
+open_collective: []
+ko_fi: []
+tidelift: []
+community_bridge: []
+liberapay: []
+issuehunt: []
+otechie: []
+lfx_crowdfunding: []
+custom:
+  - "https://basescan.org/address/0xef5766253e2d92e530e301ac22dcb8de78e89c55"
+  - "https://solscan.io/account/3HLDkipdKmJKGjbgCD8moo3GyhEY4DWdZ7JAgSpMysHp"
+  - "https://mempool.space/address/bc1pavl0c4wn596jmexty56ret76gnj9jxf7px7w983vmt6akymjgahsjk803e"
+  - "https://stellar.expert/explorer/public/account/GBS2F7RTMYO53E33JGTO32HR3IQ75RI7RDMQX5C3KROZQIJ5IXOMI2WA"

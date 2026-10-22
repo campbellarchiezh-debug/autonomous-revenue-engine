@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web3 Staking & Node ROI Calculator | Turnkey Financial Modeler</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="brand">
+          <div class="brand-icon">⚡</div>
+          <div>
+            <h1>Web3 Staking & Validator ROI Modeler</h1>
+            <p class="subtitle">Turnkey Financial Engineering & Node Yield Projection Engine</p>
+          </div>
+        </div>
+        <div class="header-badges">
+          <span class="badge badge-tech">Zero Dependencies</span>
+          <span class="badge badge-accent">Pure SVG Charts</span>
+          <span class="badge badge-green">Production Turnkey</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="dashboard-grid">
+      <!-- Left Column: Input Sliders & Assumptions -->
+      <section class="card controls-card">
+        <div class="card-header">
+          <h2>Financial Parameters & Assumptions</h2>
+          <button id="resetDefaultsBtn" class="btn btn-secondary btn-sm" title="Reset to standard defaults">Reset</button>
+        </div>
+
+        <form id="calculatorForm" class="controls-form" onsubmit="return false;">
+          <!-- Capital / Stake -->
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="initialPrincipal">Staked Capital / Principal ($)</label>
+              <input type="number" id="initialPrincipalNum" class="num-input" min="100" max="10000000" step="100" value="50000">
+            </div>
+            <input type="range" id="initialPrincipal" class="range-slider" min="1000" max="500000" step="1000" value="50000">
+            <div class="slider-ticks">
+              <span>$1k</span>
+              <span>$100k</span>
+              <span>$250k</span>
+              <span>$500k</span>
+            </div>
+          </div>
+
+          <!-- Base Staking Yield APR -->
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="aprRate">Base Protocol APR Yield (%)</label>
+              <input type="number" id="aprRateNum" class="num-input" min="0.1" max="100" step="0.1" value="8.5">
+            </div>
+            <input type="range" id="aprRate" class="range-slider" min="1" max="30" step="0.1" value="8.5">
+            <div class="slider-ticks">
+              <span>1%</span>
+              <span>10%</span>
+              <span>20%</span>
+              <span>30%</span>
+            </div>
+          </div>
+
+          <!-- Compounding Schedule -->
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="compoundingFreq">Compounding Frequency</label>
+            </div>
+            <select id="compoundingFreq" class="select-input">
+              <option value="365" selected>Daily Compounding (Auto-restake, n=365)</option>
+              <option value="52">Weekly Compounding (n=52)</option>
+              <option value="12">Monthly Compounding (n=12)</option>
+              <option value="1">Annual Compounding (n=1)</option>
+              <option value="0">Simple Interest (No Reinvesting)</option>
+            </select>
+          </div>
+
+          <!-- Commission Split -->
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="commissionRate">Validator Fee / Commission (%)</label>
+              <input type="number" id="commissionRateNum" class="num-input" min="0" max="100" step="0.5" value="5.0">
+            </div>
+            <input type="range" id="commissionRate" class="range-slider" min="0" max="25" step="0.5" value="5.0">
+            <div class="slider-ticks">
+              <span>0% (Solo)</span>
+              <span>5%</span>
+              <span>15%</span>
+              <span>25%</span>
+            </div>
+          </div>
+
+          <!-- Monthly Validator Infrastructure OpEx -->
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="monthlyOpEx">Monthly Server & Cloud OpEx ($/mo)</label>
+              <input type="number" id="monthlyOpExNum" class="num-input" min="0" max="10000" step="10" value="120">
+            </div>
+            <input type="range" id="monthlyOpEx" class="range-slider" min="0" max="1000" step="10" value="120">
+            <div class="slider-ticks">
+              <span>$0</span>
+              <span>$250</span>
+              <span>$500</span>
+              <span>$1,000</span>
+            </div>
+          </div>
+
+          <!-- MEV / Priority Fee Boost -->
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="mevBoost">MEV & Priority Fee Boost (%)</label>
+              <input type="number" id="mevBoostNum" class="num-input" min="0" max="50" step="0.5" value="2.5">
+            </div>
+            <input type="range" id="mevBoost" class="range-slider" min="0" max="20" step="0.5" value="2.5">
+            <div class="slider-ticks">
+              <span>0%</span>
+              <span>5%</span>
+              <span>10%</span>
+              <span>20%</span>
+            </div>
+          </div>
+
+          <!-- Token Price Annual Growth Assumption -->
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="tokenAppreciation">Assumed Annual Asset Appreciation (%)</label>
+              <input type="number" id="tokenAppreciationNum" class="num-input" min="-50" max="200" step="1" value="10">
+            </div>
+            <input type="range" id="tokenAppreciation" class="range-slider" min="-30" max="50" step="1" value="10">
+            <div class="slider-ticks">
+              <span>-30%</span>
+              <span>0%</span>
+              <span>+25%</span>
+              <span>+50%</span>
+            </div>
+          </div>
+
+          <!-- Investment Horizon -->
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="horizonYears">Projection Horizon (Years)</label>
+              <input type="number" id="horizonYearsNum" class="num-input" min="1" max="10" step="1" value="5">
+            </div>
+            <input type="range" id="horizonYears" class="range-slider" min="1" max="10" step="1" value="5">
+            <div class="slider-ticks">
+              <span>1 Yr</span>
+              <span>3 Yrs</span>
+              <span>5 Yrs</span>
+              <span>10 Yrs</span>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- Right Column: Outputs, Visualizations & Pro Cards -->
+      <div class="results-column">
+        <!-- KPI Metric Grid -->
+        <section class="kpi-grid">
+          <div class="kpi-card" id="kpiNetApy">
+            <span class="kpi-label">Effective Net APY</span>
+            <span class="kpi-value text-accent" id="metricNetApy">11.24%</span>
+            <span class="kpi-subtext" id="metricApySpread">vs 8.5% nominal APR</span>
+          </div>
+
+          <div class="kpi-card" id="kpiGrossAnnual">
+            <span class="kpi-label">Year 1 Gross Yield</span>
+            <span class="kpi-value" id="metricGrossAnnual">$5,620</span>
+            <span class="kpi-subtext" id="metricMonthlyYield">~$468.33 / month</span>
+          </div>
+
+          <div class="kpi-card" id="kpiNetCashflow">
+            <span class="kpi-label">Year 1 Net Profit (after OpEx)</span>
+            <span class="kpi-value text-green" id="metricNetCashflow">$3,909</span>
+            <span class="kpi-subtext" id="metricOpExDeducted">OpEx: -$1,440/yr</span>
+          </div>
+
+          <div class="kpi-card" id="kpiBreakEven">
+            <span class="kpi-label">OpEx Break-Even Horizon</span>
+            <span class="kpi-value" id="metricBreakEven">3.1 Months</span>
+            <span class="kpi-subtext">Capital recovery milestone</span>
+          </div>
+
+          <div class="kpi-card highlight-card" id="kpiTotalWealth">
+            <span class="kpi-label">Projected Portfolio Value</span>
+            <span class="kpi-value text-highlight" id="metricTotalWealth">$104,820</span>
+            <span class="kpi-subtext" id="metricTotalGain">+109.6% net gain over 5 yrs</span>
+          </div>
+        </section>
+
+        <!-- Dynamic Pure-SVG Visualizer -->
+        <section class="card chart-card">
+          <div class="card-header">
+            <div>
+              <h2>Compound Growth & OpEx Projection Chart</h2>
+              <p class="card-subtitle">Zero-dependency dynamic SVG vector visualization</p>
+            </div>
+            <div class="chart-legend">
+              <span class="legend-item"><span class="legend-color color-total"></span> Total Value</span>
+              <span class="legend-item"><span class="legend-color color-rewards"></span> Cumulative Rewards</span>
+              <span class="legend-item"><span class="legend-color color-opex"></span> Cumulative OpEx</span>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <svg id="projectionChart" class="svg-chart" viewBox="0 0 760 320" preserveAspectRatio="none">
+              <!-- SVG chart elements generated dynamically by app.js -->
+            </svg>
+            <div id="chartTooltip" class="chart-tooltip" style="display: none;"></div>
+          </div>
+        </section>
+
+        <!-- Sensitivity & Scenario Analysis -->
+        <section class="card scenarios-card">
+          <div class="card-header">
+            <h2>Market Sensitivity & Scenario Analysis</h2>
+            <span class="badge badge-sm">Multi-Variable Stress Test</span>
+          </div>
+          <div class="scenarios-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Scenario</th>
+                  <th>Yield Assumption</th>
+                  <th>Assumed Asset Growth</th>
+                  <th>Year 1 Net Return</th>
+                  <th>Ending Portfolio Value</th>
+                  <th>Overall Net ROI</th>
+                </tr>
+              </thead>
+              <tbody id="scenarioTableBody">
+                <!-- Populated dynamically by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Compound Schedule Table -->
+        <section class="card schedule-card">
+          <div class="card-header">
+            <h2>Annual Wealth & Yield Amortization Schedule</h2>
+            <button id="exportCsvBtn" class="btn btn-secondary btn-sm">Export Data (JSON)</button>
+          </div>
+          <div class="scenarios-table-wrapper">
+            <table class="data-table" id="scheduleTable">
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Starting Principal</th>
+                  <th>Gross Staking Rewards</th>
+                  <th>Validator OpEx</th>
+                  <th>Net Annual Cashflow</th>
+                  <th>Ending Value</th>
+                  <th>Cumulative ROI</th>
+                </tr>
+              </thead>
+              <tbody id="scheduleTableBody">
+                <!-- Populated dynamically by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Pro / Sponsor Donation Card -->
+        <section class="card sponsor-card">
+          <div class="sponsor-header">
+            <div class="sponsor-badge">⚡ SUPPORT THE OPEN SOURCE REVENUE ENGINE</div>
+            <h2>Sponsor & Deploy Turnkey Web3 Tools</h2>
+            <p>
+              This financial modeler and the companion developer toolkits are 100% open-source under the MIT license with zero tracking, telemetry, or external dependencies. 
+              Support continuous development, RPC infrastructure, and new financial templates by tipping the developer wallets below.
+            </p>
+          </div>
+
+          <div class="wallet-rails-grid">
+            <!-- Base EVM -->
+            <div class="wallet-rail-item">
+              <div class="wallet-rail-header">
+                <span class="chain-tag chain-base">Base EVM</span>
+                <span class="chain-desc">ETH & ERC-20 Tokens (ChainID 8453)</span>
+              </div>
+              <div class="address-box">
+                <code class="wallet-address" id="addrBase">0xef5766253e2d92e530e301ac22dcb8de78e89c55</code>
+                <button class="btn-copy" onclick="copyWallet('addrBase', this)" title="Copy Base Address">Copy</button>
+              </div>
+            </div>
+
+            <!-- Solana -->
+            <div class="wallet-rail-item">
+              <div class="wallet-rail-header">
+                <span class="chain-tag chain-solana">Solana</span>
+                <span class="chain-desc">SOL & SPL Tokens</span>
+              </div>
+              <div class="address-box">
+                <code class="wallet-address" id="addrSolana">3HLDkipdKmJKGjbgCD8moo3GyhEY4DWdZ7JAgSpMysHp</code>
+                <button class="btn-copy" onclick="copyWallet('addrSolana', this)" title="Copy Solana Address">Copy</button>
+              </div>
+            </div>
+
+            <!-- Bitcoin -->
+            <div class="wallet-rail-item">
+              <div class="wallet-rail-header">
+                <span class="chain-tag chain-btc">Bitcoin</span>
+                <span class="chain-desc">Taproot Bech32m (Native SegWit v1)</span>
+              </div>
+              <div class="address-box">
+                <code class="wallet-address" id="addrBtc">bc1pavl0c4wn596jmexty56ret76gnj9jxf7px7w983vmt6akymjgahsjk803e</code>
+                <button class="btn-copy" onclick="copyWallet('addrBtc', this)" title="Copy Bitcoin Address">Copy</button>
+              </div>
+            </div>
+
+            <!-- Stellar -->
+            <div class="wallet-rail-item">
+              <div class="wallet-rail-header">
+                <span class="chain-tag chain-xlm">Stellar</span>
+                <span class="chain-desc">XLM & Soroban Assets</span>
+              </div>
+              <div class="address-box">
+                <code class="wallet-address" id="addrXlm">GBS2F7RTMYO53E33JGTO32HR3IQ75RI7RDMQX5C3KROZQIJ5IXOMI2WA</code>
+                <button class="btn-copy" onclick="copyWallet('addrXlm', this)" title="Copy Stellar Address">Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="sponsor-footer">
+            <span class="direct-rail-note">✓ Non-custodial verified crypto payment rails • Verified on-chain</span>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <p>Autonomous Revenue Engine • Milestone 3 Digital Assets • MIT Licensed • Standalone Zero-Dependency Build</p>
+      </div>
+    </footer>
+  </div>
+
+  <div id="toastNotification" class="toast">Address copied to clipboard!</div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web3 Micro-Utility & Developer Suite</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header class="navbar">
+    <div class="nav-brand">
+      <div class="logo-icon">⚡</div>
+      <div class="brand-text">
+        <span class="brand-title">WEB3 DEVELOPER UTILITY</span>
+        <span class="brand-sub">Zero-Dependency Multi-Chain Security & Telemetry</span>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <button class="nav-tab active" data-tab="inspector">Address Inspector</button>
+      <button class="nav-tab" data-tab="rpc-monitor">RPC Monitor</button>
+      <button class="nav-tab" data-tab="converter">Unit & Gas Calculator</button>
+      <button class="nav-btn-tip" id="open-tip-modal">
+        <span class="heart">♥</span> Sponsor & Tip
+      </button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- TAB 1: ADDRESS INSPECTOR -->
+    <section id="tab-inspector" class="tab-pane active">
+      <div class="hero-banner">
+        <h2>Multi-Chain Address Safety & Exploit Inspector</h2>
+        <p>Pure client-side cryptographic format validation, EIP-55 checksum verification, and threat scanner for zero-width exploits, Cyrillic/Greek homoglyphs, and vanity address poisoning.</p>
+      </div>
+
+      <div class="card glass">
+        <div class="input-group">
+          <label for="address-input">Enter Cryptocurrency Address:</label>
+          <div class="input-row">
+            <input type="text" id="address-input" placeholder="0x..., bc1p..., 3HLD..., or GBS2..." autocomplete="off" spellcheck="false">
+            <button id="inspect-btn" class="btn-primary">Inspect Address</button>
+          </div>
+          <div class="quick-samples">
+            <span>Quick Test Samples:</span>
+            <button class="sample-btn" data-addr="0xef5766253e2d92e530e301ac22dcb8de78e89c55">Base Beneficiary</button>
+            <button class="sample-btn" data-addr="3HLDkipdKmJKGjbgCD8moo3GyhEY4DWdZ7JAgSpMysHp">Solana Beneficiary</button>
+            <button class="sample-btn" data-addr="bc1pavl0c4wn596jmexty56ret76gnj9jxf7px7w983vmt6akymjgahsjk803e">BTC Taproot</button>
+            <button class="sample-btn" data-addr="GBS2F7RTMYO53E33JGTO32HR3IQ75RI7RDMQX5C3KROZQIJ5IXOMI2WA">Stellar Beneficiary</button>
+            <button class="sample-btn warning-sample" data-addr="0xef5766253e​2d92e530e301ac22dcb8de78e89c55">Zero-Width Exploit</button>
+            <button class="sample-btn warning-sample" data-addr="0xеf5766253e2d92e530e301ac22dcb8de78e89c55">Homoglyph Spoof</button>
+            <button class="sample-btn warning-sample" data-addr="0xef57000000000000000000000000000078e89c55">Poisoning Attack</button>
+          </div>
+        </div>
+
+        <!-- Result Box -->
+        <div id="inspector-result" class="result-box hidden">
+          <div class="result-header">
+            <div class="status-indicator" id="result-status-badge">VALID</div>
+            <div class="chain-badge" id="result-chain-badge">BASE EVM</div>
+          </div>
+          <div class="result-details">
+            <div class="detail-row">
+              <span class="detail-label">Canonical Form:</span>
+              <span class="detail-value mono" id="result-canonical-addr">--</span>
+              <button class="copy-btn" id="copy-canonical-btn" title="Copy to clipboard">📋 Copy</button>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Address Type:</span>
+              <span class="detail-value" id="result-type">--</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Security Evaluation:</span>
+              <div id="result-security-summary" class="security-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: RPC HEALTH MONITOR -->
+    <section id="tab-rpc-monitor" class="tab-pane">
+      <div class="hero-banner">
+        <h2>Multi-Chain RPC Telemetry & Latency Benchmarker</h2>
+        <p>Continuous health monitoring, round-trip latency benchmarking, block/slot heights, and chain sync diagnostics for Base, Ethereum, Solana, Bitcoin, and Stellar.</p>
+      </div>
+
+      <div class="controls-bar">
+        <button id="refresh-rpc-btn" class="btn-primary">⚡ Benchmark All RPCs</button>
+        <div class="toggle-group">
+          <label>
+            <input type="checkbox" id="rpc-mock-toggle" checked>
+            <span>Deterministic Sandbox Simulation</span>
+          </label>
+        </div>
+        <span class="last-checked" id="rpc-last-checked">Last benchmark: Just now</span>
+      </div>
+
+      <div class="grid-cards" id="rpc-cards-grid">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- TAB 3: UNIT & GAS CALCULATOR -->
+    <section id="tab-converter" class="tab-pane">
+      <div class="hero-banner">
+        <h2>Cryptocurrency Unit Converter & Gas Fee Calculator</h2>
+        <p>Exact decimal arithmetic across EVM, Solana, Bitcoin, and Stellar with zero floating-point precision loss. Interactive EVM transaction fee and USD projections.</p>
+      </div>
+
+      <div class="grid-2col">
+        <!-- Unit Converter -->
+        <div class="card glass">
+          <h3>Unit Converter</h3>
+          <div class="form-group">
+            <label for="chain-select">Chain Ecosystem:</label>
+            <select id="chain-select">
+              <option value="evm">Base / Ethereum (EVM)</option>
+              <option value="solana">Solana</option>
+              <option value="bitcoin">Bitcoin</option>
+              <option value="stellar">Stellar</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="conv-amount">Amount:</label>
+            <input type="number" id="conv-amount" value="1.0" step="any">
+          </div>
+          <div class="form-row">
+            <div class="form-group half">
+              <label for="conv-from">From Unit:</label>
+              <select id="conv-from"></select>
+            </div>
+            <div class="form-group half">
+              <label for="conv-to">To Unit:</label>
+              <select id="conv-to"></select>
+            </div>
+          </div>
+          <div class="calc-result-box">
+            <div class="calc-label">Calculated Result:</div>
+            <div class="calc-value mono" id="conv-result">--</div>
+          </div>
+        </div>
+
+        <!-- Gas Fee Calculator -->
+        <div class="card glass">
+          <h3>EVM Gas Fee & Transaction Cost Projector</h3>
+          <div class="form-group">
+            <label for="gas-preset">Transaction Preset:</label>
+            <select id="gas-preset">
+              <option value="eth_transfer">Native ETH / Base Transfer (21,000 gas)</option>
+              <option value="erc20_transfer">ERC-20 Token Transfer (65,000 gas)</option>
+              <option value="uniswap_swap">DEX AMM Swap (150,000 gas)</option>
+              <option value="contract_deployment">Contract Deployment (1,500,000 gas)</option>
+              <option value="custom">Custom Gas Limit</option>
+            </select>
+          </div>
+          <div class="form-group" id="custom-gas-limit-group" style="display: none;">
+            <label for="gas-limit-input">Gas Limit (Units):</label>
+            <input type="number" id="gas-limit-input" value="21000">
+          </div>
+          <div class="form-group">
+            <label for="gas-price-input">Gas Price (Gwei): <span id="gas-price-val">20.0</span> Gwei</label>
+            <input type="range" id="gas-price-slider" min="0.01" max="100" step="0.1" value="20.0">
+          </div>
+          <div class="form-group">
+            <label for="eth-price-input">ETH Price ($ USD):</label>
+            <input type="number" id="eth-price-input" value="2600.0" step="10">
+          </div>
+          <div class="gas-output-grid">
+            <div class="gas-stat">
+              <span class="stat-title">Fee in Native (ETH)</span>
+              <span class="stat-val mono" id="gas-cost-eth">0.00042 ETH</span>
+            </div>
+            <div class="gas-stat">
+              <span class="stat-title">Fee in USD</span>
+              <span class="stat-val highlight mono" id="gas-cost-usd">$1.09 USD</span>
+            </div>
+            <div class="gas-stat">
+              <span class="stat-title">Fee in Gwei</span>
+              <span class="stat-val mono" id="gas-cost-gwei">420,000 Gwei</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- SPONSOR & TIPPING MODAL -->
+  <div id="tip-modal" class="modal-overlay hidden">
+    <div class="modal-content glass">
+      <div class="modal-header">
+        <h3>⚡ Multi-Chain Payment & Sponsor Rails</h3>
+        <button id="close-modal-btn" class="close-btn">&times;</button>
+      </div>
+      <p class="modal-intro">
+        Direct, autonomous non-custodial payment deposit rails. Fund open-source developer tooling, micro-grants, and automated audits across 4 major chains:
+      </p>
+
+      <div class="wallet-cards-list">
+        <!-- Base EVM -->
+        <div class="wallet-card">
+          <div class="wallet-card-header">
+            <span class="wallet-network base">Base EVM</span>
+            <span class="wallet-asset">ETH / USDC</span>
+          </div>
+          <div class="wallet-address-row">
+            <input type="text" class="wallet-addr-input mono" readonly value="0xef5766253e2d92e530e301ac22dcb8de78e89c55">
+            <button class="copy-wallet-btn" data-copy="0xef5766253e2d92e530e301ac22dcb8de78e89c55">📋 Copy</button>
+            <button class="qr-toggle-btn" data-target="qr-base">QR</button>
+          </div>
+          <div id="qr-base" class="qr-container hidden"></div>
+        </div>
+
+        <!-- Solana -->
+        <div class="wallet-card">
+          <div class="wallet-card-header">
+            <span class="wallet-network sol">Solana</span>
+            <span class="wallet-asset">SOL / SPL</span>
+          </div>
+          <div class="wallet-address-row">
+            <input type="text" class="wallet-addr-input mono" readonly value="3HLDkipdKmJKGjbgCD8moo3GyhEY4DWdZ7JAgSpMysHp">
+            <button class="copy-wallet-btn" data-copy="3HLDkipdKmJKGjbgCD8moo3GyhEY4DWdZ7JAgSpMysHp">📋 Copy</button>
+            <button class="qr-toggle-btn" data-target="qr-sol">QR</button>
+          </div>
+          <div id="qr-sol" class="qr-container hidden"></div>
+        </div>
+
+        <!-- Bitcoin -->
+        <div class="wallet-card">
+          <div class="wallet-card-header">
+            <span class="wallet-network btc">Bitcoin</span>
+            <span class="wallet-asset">BTC (Taproot)</span>
+          </div>
+          <div class="wallet-address-row">
+            <input type="text" class="wallet-addr-input mono" readonly value="bc1pavl0c4wn596jmexty56ret76gnj9jxf7px7w983vmt6akymjgahsjk803e">
+            <button class="copy-wallet-btn" data-copy="bc1pavl0c4wn596jmexty56ret76gnj9jxf7px7w983vmt6akymjgahsjk803e">📋 Copy</button>
+            <button class="qr-toggle-btn" data-target="qr-btc">QR</button>
+          </div>
+          <div id="qr-btc" class="qr-container hidden"></div>
+        </div>
+
+        <!-- Stellar -->
+        <div class="wallet-card">
+          <div class="wallet-card-header">
+            <span class="wallet-network xlm">Stellar</span>
+            <span class="wallet-asset">XLM</span>
+          </div>
+          <div class="wallet-address-row">
+            <input type="text" class="wallet-addr-input mono" readonly value="GBS2F7RTMYO53E33JGTO32HR3IQ75RI7RDMQX5C3KROZQIJ5IXOMI2WA">
+            <button class="copy-wallet-btn" data-copy="GBS2F7RTMYO53E33JGTO32HR3IQ75RI7RDMQX5C3KROZQIJ5IXOMI2WA">📋 Copy</button>
+            <button class="qr-toggle-btn" data-target="qr-xlm">QR</button>
+          </div>
+          <div id="qr-xlm" class="qr-container hidden"></div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <span>Verified Beneficiary Ledger: Autonomous Revenue Engine</span>
+        <button id="close-modal-footer-btn" class="btn-secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden">Copied to clipboard!</div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <span>Web3 Micro-Utility & Developer Tools Suite • Built with pure Python stdlib & vanilla Web technologies.</span>
+      <span class="footer-links">
+        <a href="#" id="footer-sponsor-link">Support & Tipping Rails</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

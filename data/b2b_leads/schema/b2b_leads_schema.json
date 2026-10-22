@@ -1,0 +1,210 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "B2BLeadPipelineDataset",
+  "description": "Draft-07 JSON Schema for high-AOV B2B lead sourcing, diagnostic conversion leak analysis, and personalized outreach assets.",
+  "type": "object",
+  "required": ["version", "generated_at", "total_targets", "targets"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Dataset semantic version"
+    },
+    "generated_at": {
+      "type": "string",
+      "description": "ISO 8601 generation timestamp"
+    },
+    "total_targets": {
+      "type": "integer",
+      "minimum": 15,
+      "description": "Total count of commercial targets (minimum 15)"
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 15,
+      "description": "Array of verified commercial targets",
+      "items": {
+        "type": "object",
+        "required": [
+          "target_id",
+          "company_name",
+          "vertical",
+          "headquarters",
+          "website_url",
+          "estimated_aov",
+          "estimated_monthly_visitors",
+          "estimated_ad_spend_monthly",
+          "decision_maker",
+          "primary_conversion_leak",
+          "secondary_conversion_leak",
+          "estimated_monthly_lost_pipeline",
+          "tailored_pitch_file",
+          "audit_report_file"
+        ],
+        "properties": {
+          "target_id": {
+            "type": "string",
+            "pattern": "^TGT-\\d{3}$",
+            "description": "Unique target identifier in format TGT-###"
+          },
+          "company_name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Full commercial company name"
+          },
+          "vertical": {
+            "type": "string",
+            "minLength": 1,
+            "description": "High-AOV industry vertical"
+          },
+          "headquarters": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Geographical headquarters location"
+          },
+          "website_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Canonical company website URL"
+          },
+          "domain_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Alternative domain URL alias"
+          },
+          "estimated_aov": {
+            "type": "number",
+            "minimum": 5000,
+            "description": "Estimated Average Order Value in USD (minimum $5,000)"
+          },
+          "estimated_aov_usd": {
+            "type": "number",
+            "minimum": 5000,
+            "description": "AOV in USD"
+          },
+          "estimated_monthly_visitors": {
+            "type": "integer",
+            "minimum": 500,
+            "description": "Estimated monthly website visitors"
+          },
+          "monthly_visitors": {
+            "type": "integer",
+            "minimum": 500,
+            "description": "Monthly website traffic"
+          },
+          "estimated_ad_spend_monthly": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Estimated monthly paid advertising spend in USD"
+          },
+          "estimated_monthly_ad_spend_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Monthly ad spend in USD"
+          },
+          "decision_maker": {
+            "type": "object",
+            "description": "Key executive or practice owner contact profile",
+            "required": ["name", "title", "email", "phone", "linkedin_url"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Full name of decision maker"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Corporate or clinical title"
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "description": "Verified business email address"
+              },
+              "phone": {
+                "type": "string",
+                "minLength": 7,
+                "description": "Direct phone or office line"
+              },
+              "linkedin_url": {
+                "type": "string",
+                "description": "LinkedIn profile link"
+              }
+            }
+          },
+          "primary_conversion_leak": {
+            "type": "string",
+            "minLength": 10,
+            "description": "Summary of primary conversion bottleneck"
+          },
+          "secondary_conversion_leak": {
+            "type": "string",
+            "minLength": 10,
+            "description": "Summary of secondary conversion friction point"
+          },
+          "estimated_monthly_lost_pipeline": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Quantified monthly revenue loss in USD"
+          },
+          "estimated_annual_recoverable": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Quantified annual recoverable revenue in USD"
+          },
+          "tailored_pitch_file": {
+            "type": "string",
+            "description": "Relative file path to tailored 90s pitch script"
+          },
+          "audit_report_file": {
+            "type": "string",
+            "description": "Relative file path to comprehensive diagnostic audit report"
+          },
+          "diagnostics": {
+            "type": "object",
+            "required": [
+              "primary_leak_summary",
+              "primary_leak_technical_detail",
+              "secondary_leak_summary",
+              "mobile_lcp_seconds",
+              "mobile_cls_score",
+              "speed_to_lead_sla_hours"
+            ],
+            "properties": {
+              "primary_leak_summary": { "type": "string" },
+              "primary_leak_technical_detail": { "type": "string" },
+              "secondary_leak_summary": { "type": "string" },
+              "mobile_lcp_seconds": { "type": "number", "minimum": 0 },
+              "mobile_cls_score": { "type": "number", "minimum": 0 },
+              "speed_to_lead_sla_hours": { "type": "number", "minimum": 0 }
+            }
+          },
+          "financial_impact": {
+            "type": "object",
+            "required": [
+              "estimated_monthly_lost_pipeline_usd",
+              "estimated_annual_recoverable_usd"
+            ],
+            "properties": {
+              "estimated_monthly_lost_pipeline_usd": { "type": "number", "minimum": 0 },
+              "estimated_annual_recoverable_usd": { "type": "number", "minimum": 0 }
+            }
+          },
+          "outreach_assets": {
+            "type": "object",
+            "required": [
+              "email_subject",
+              "email_body_template",
+              "video_script_90sec"
+            ],
+            "properties": {
+              "email_subject": { "type": "string" },
+              "email_body_template": { "type": "string" },
+              "video_script_90sec": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
